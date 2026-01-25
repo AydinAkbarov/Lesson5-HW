@@ -1,0 +1,134 @@
+﻿@model IEnumerable<Lesson5_asp_hw.Models.Product>
+
+<style>
+    body {
+        background: #f4f6f8;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .product-wrapper {
+        max-width: 1100px;
+        margin: 40px auto;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 32px;
+        font-weight: 600;
+        margin-bottom: 40px;
+    }
+
+    .products {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 25px;
+    }
+
+    .product-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        transition: transform .3s ease, box-shadow .3s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 35px rgba(0,0,0,0.12);
+    }
+
+    .product-name {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .product-desc {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 16px;
+        line-height: 1.5;
+    }
+
+    .product-price {
+        font-size: 18px;
+        font-weight: bold;
+        color: #2e7d32;
+    }
+
+    .empty-box {
+        background: #fff3cd;
+        padding: 30px;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 18px;
+    }
+
+    .filter-form {
+        max-width: 500px;
+        margin: 20px auto;
+        display: flex;
+        gap: 10px;
+    }
+
+    .filter-form input {
+        flex: 1;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    .filter-form button {
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: none;
+        background: #60B360;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .filter-form button:hover {
+        background: #437D43;
+        transform: translateY(-2px);
+    }
+</style>
+
+<form asp-controller="Product" asp-action="GetProductByPrice" method="get" class="filter-form">
+    <input type="number" name="minPrice" class="form-control" placeholder="Min Price" required />
+    <input type="number" name="maxPrice" class="form-control" placeholder="Max Price" required />
+    <button type="submit">Filter</button>
+</form>
+
+<div class="product-wrapper">
+    <div class="title">Filtered Products</div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-box">
+            🚫 No products found
+        </div>
+    }
+    else
+    {
+        <div class="products">
+            @foreach (var product in Model)
+            {
+                <div class="product-card">
+                                         <div class="product-id">id - @product.Id</div>
+
+                    <div class="product-name">@product.Name</div>
+
+                    <div class="product-desc">
+                        @product.Description
+                    </div>
+
+                    <div class="product-price">
+                        $@product.Price
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
