@@ -1,48 +1,39 @@
-﻿using Lesson5_asp_hw.Helpers;
-using Lesson5_asp_hw.Services.Abstracts;
+using Lesson5_asp_hw.Helpers;
 using Lesson5_asp_hw.Models;
+using Lesson5_asp_hw.Services.Abstracts;
 
-namespace Lesson5_asp_hw.Services.Concretes
+namespace Lesson5_asp_hw.Services.Concretes;
+
+public class ProductRepository : IRepository
 {
-    public class ProductRepository : IRepository
+    public List<Product> Products = ProductHelper.products;
+
+    public bool Add(Product product)
     {
-        public List<Product> Products =ProductHelper.products;
+        if (Products.Any(x => x.Id == product.Id))
+            return false;
 
-        public bool Add(Product product)
-        {
-            var isExists = Products.Any(p => p.Id == product.Id);
-            if (isExists)
-            {
-                return false;
-            }
-            product.Id = Products.Count > 0 ? Products.Max(p => p.Id) + 1 : 1;
-            Products.Add(product);
-            return true;
-        }
+        product.Id = Products.Count == 0 ? 1 : Products.Max(x => x.Id) + 1;
+        Products.Add(product);
 
-        public IEnumerable<Product> GetAllProducts()
-        {
-            return Products;
-        }
-        public Product GetProductById(int id)
-        {
-            return Products.FirstOrDefault(p => p.Id == id);
-        }
+        return true;
+    }
 
-        public List<Product> GetProductsByPrice(decimal minPrice, decimal maxPrice)
-        {
-            return Products.Where(p => p.Price >= minPrice && p.Price <= maxPrice).ToList();
-        }
+    public IEnumerable<Product> GetAllProducts() => Products;
 
-        public bool Remove(int id)
-        {
-            var IsExists = Products.FirstOrDefault(p => p.Id == id);
-            if (IsExists == null)
-            {
-                return false;
-            }
-            Products.Remove(IsExists);
-            return true;
-        }
+    public Product GetProductById(int id) =>
+        Products.FirstOrDefault(x => x.Id == id);
+
+    public List<Product> GetProductsByPrice(decimal minPrice, decimal maxPrice) =>
+        Products.Where(x => x.Price >= minPrice && x.Price <= maxPrice).ToList();
+
+    public bool Remove(int id)
+    {
+        var item = Products.FirstOrDefault(x => x.Id == id);
+        if (item is null)
+            return false;
+
+        Products.Remove(item);
+        return true;
     }
 }
